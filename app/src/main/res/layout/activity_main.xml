@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,45 +7,72 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.spinner.MainActivity">
+    tools:context="com.example.myapplication.MainActivity"
+    android:weightSum="1"
+    android:orientation="vertical">
 
-    <Spinner
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/sp_Country"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/temperature"
-        android:layout_alignEnd="@+id/temperature" />
+        android:weightSum="1">
+        <Spinner
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/sp_Country"
 
-    <Spinner
-        android:layout_width="wrap_content"
+
+            android:layout_alignRight="@+id/textView"
+            android:layout_alignEnd="@+id/textView" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/sp_City"
+            android:layout_alignTop="@+id/sp_Country"
+            android:layout_toRightOf="@+id/sp_Country" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/sp_City"
-        android:layout_above="@+id/textView"
-        android:layout_alignTop="@+id/sp_Country"
-        android:layout_toRightOf="@+id/temperature"
-        android:layout_toEndOf="@+id/temperature" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Температура"
-        android:id="@+id/textView"
-        android:layout_below="@+id/sp_Country"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="75dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/temperature"
-        android:textSize="70dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_weight="0.69">
 
 
-</RelativeLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minHeight="50dp"
+            android:id="@+id/imageView"
+            android:src="@drawable/sunbig"
+            android:layout_gravity="center_horizontal"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="198dp"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Температура"
+            android:id="@+id/textView"
+            android:layout_alignTop="@+id/temperature"
+            android:layout_gravity="center_horizontal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/temperature"
+            android:textSize="70dp"
+            android:layout_gravity="center_horizontal"
+
+            />
+
+    </LinearLayout>
+</LinearLayout>
