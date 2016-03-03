@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     String Country_Name="";
     public String country = "";
     List<String> countries = new ArrayList<>();
+    List<String> cities = new ArrayList<>();
     private static final String TAG = "Debug";
 
     @Override
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }.execute();
 
+
         Spinner sp_Country = (Spinner) findViewById(R.id.sp_Country);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
                 android.R.layout.simple_spinner_item, countries);
@@ -76,19 +78,48 @@ public class MainActivity extends AppCompatActivity {
         sp_Country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent,
                                        View itemSelected, int selectedItemPosition, long selectedId) {
-
+                cities.clear();
                  country =  parent.getSelectedItem().toString();
-                try {
-                    Get_City get_city = new Get_City();
-                    get_city.Get_Country(country);
-                    Spinner sp_City = (Spinner) findViewById(R.id.sp_City);
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
-                            android.R.layout.simple_spinner_item, get_city.cities);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    sp_City.setAdapter(adapter);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                new AsyncTask<Void, Void, Document>() {
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                        pDialog = new ProgressDialog(MainActivity.this);
+                        pDialog.setTitle("Загрузка городов");
+                        pDialog.setMessage("Загрузка...");
+                        pDialog.setIndeterminate(false);
+                        pDialog.show();
+                    }
+                    @Override
+                    protected Document doInBackground(Void... params) {
+                        Document doc = null;
+                        try {
+                            doc = Jsoup.connect("https://pogoda.yandex.ru/static/cities.xml").get();
+
+                        } catch (IOException e) {
+                            Log.e(TAG, "onCreate: " + e.getMessage());
+                        }
+                        return doc;
+                    }
+                    @Override
+                    protected void onPostExecute(Document document) {
+                        super.onPostExecute(document);
+                        Elements links = document.getElementsByTag("city");
+                        for (Element link : links) {
+                            if (link.attr("country").equals(country)){
+                             cities.add(link.text());
+                            }
+                        }
+                        Spinner sp_City = (Spinner) findViewById(R.id.sp_City);
+
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
+                                android.R.layout.simple_spinner_item, cities);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        sp_City.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+
+                        pDialog.hide();
+                    }
+                }.execute();
 
             }
 
