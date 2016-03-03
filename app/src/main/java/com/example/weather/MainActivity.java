@@ -173,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                         return doc;
                     }
-
                     @Override
                     protected void onPostExecute(Document document) {
                         String weather = "";
