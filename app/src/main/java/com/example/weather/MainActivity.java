@@ -22,6 +22,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ProgressDialog pDialog;
+    String Country_Name="";
+    public String country = "";
     List<String> countries = new ArrayList<>();
     private static final String TAG = "Debug";
 
@@ -29,9 +31,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
         new AsyncTask<Void, Void, Document>() {
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -40,9 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 pDialog.setMessage("Загрузка...");
                 pDialog.setIndeterminate(false);
                 pDialog.show();
-
             }
-
             @Override
             protected Document doInBackground(Void... params) {
                 Document doc = null;
@@ -54,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return doc;
             }
-
             @Override
             protected void onPostExecute(Document document) {
                 super.onPostExecute(document);
@@ -62,31 +58,47 @@ public class MainActivity extends AppCompatActivity {
                 for (Element link : links) {
                     countries.add(link.attr("name"));
                 }
+                Spinner sp_Country = (Spinner) findViewById(R.id.sp_Country);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
+                        android.R.layout.simple_spinner_item, countries);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_Country.setAdapter(adapter);
                 pDialog.hide();
             }
         }.execute();
 
         Spinner sp_Country = (Spinner) findViewById(R.id.sp_Country);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
                 android.R.layout.simple_spinner_item, countries);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_Country.setAdapter(adapter);
-        sp_Country.setSelection(2);
 
         sp_Country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent,
                                        View itemSelected, int selectedItemPosition, long selectedId) {
 
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "Ваш выбор: " + String.valueOf(selectedItemPosition), Toast.LENGTH_SHORT);
-                toast.show();
+                 country =  parent.getSelectedItem().toString();
+                try {
+                    Get_City get_city = new Get_City();
+                    get_city.Get_Country(country);
+                    Spinner sp_City = (Spinner) findViewById(R.id.sp_City);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
+                            android.R.layout.simple_spinner_item, get_city.cities);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    sp_City.setAdapter(adapter);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-    }
 
+
+
+    }
 
 }
 
